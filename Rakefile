@@ -18,6 +18,11 @@ task :run do
   sh "#{RP6502} -D /dev/ttyUSB0 --noreset run #{target}.rp6502"
 end
 
+desc "Upload it"
+task :upload do
+  sh "#{RP6502} -D /dev/ttyUSB0 upload #{target}.rp6502"
+end
+
 desc 'clean build'
 task :clean do
   FileUtils.rm(["#{target}.bin", "#{target}.rp6502", "#{target}.lst"])
