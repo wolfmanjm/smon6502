@@ -42,19 +42,19 @@ IRQ_LO          = $0314         ; Vector: Hardware IRQ Interrupt Address Lo
 IRQ_HI          = $0315         ; Vector: Hardware IRQ Interrupt Address Hi
 BRK_LO          = $0316         ; Vector: BRK Lo
 BRK_HI          = $0317         ; Vector: BRK Hi
-CHRIN           = $FFCF         ; Kernal input routine
-CHROUT          = $FFD2         ; Kernal output routine
-STOP            = $FFE1         ; Kernal test STOP routine
-GETIN           = $FFE4         ; Kernal get input routine
+CHRIN           = JMPTABLE+(3*$1A) ; $FFCF         ; Kernal input routine
+CHROUT          = JMPTABLE+(3*$1B) ; $FFD2         ; Kernal output routine
+STOP            = JMPTABLE+(3*$20) ; $FFE1         ; Kernal test STOP routine
+GETIN           = JMPTABLE+(3*$21) ; $FFE4         ; Kernal get input routine
 
-        .org    $8000
+;        .org    $8000
         .org    $e000
-
 ENTRY:  lda     #<SMON                        ; set break-vector to program start
         sta     BRK_LO
-        lda     #>SMON    
+        lda     #>SMON
         sta     BRK_HI
         brk
+        nop
 
         ;; help message
 HLPMSG: .byte   "A xxxx - Assemble starting at x (end assembly with 'f', use Mxx for label)",0
@@ -73,6 +73,7 @@ HLPMSG: .byte   "A xxxx - Assemble starting at x (end assembly with 'f', use Mxx
         .byte   "MS - Check and print memory size",0
         .byte   "MT xxxx yyyy (nn) - Test memory x-y (repeat n times)",0
         .byte   "O xxxx yyyy aa - Fill memory x-y with a",0
+        .byte   "R - Display registers",0
         .if     VIA > 0
         .byte   "TW xxxx - Trace walk (single step)",0
         .byte   "TB xxxx nn - Trace break (set break point at x, stop when hit n times)",0
@@ -1637,7 +1638,7 @@ MTL7:   tya
         jsr     LC466           ; check if we've tested the whole range
         bcc     MTL5            ; repeat if not
         lda     #'+'            ; print pacifier
-        jsr     $FFD2
+        jsr     CHROUT
         dec     $FF             ; decrement repetition count
         bne     MTL3            ; go again until 0
         rts
@@ -1734,9 +1735,9 @@ TWINT:  lda     #$40            ; clear VIA timer 1 interrupt flag
         lda     #$40            ; set T1 free run, T2 clock ?2
         sta     VIA_ACR         ; set VIA 1 ACR
         lda	#$40		; disable VIA timer 1 interrupt
-	sta	VIA_IER		; set VIA 1 IER
+	    sta	VIA_IER		; set VIA 1 IER
         lda	#$90		; enable VIA CB1 interrupt
-	sta	VIA_IER		; set VIA 1 IER
+	    sta	VIA_IER		; set VIA 1 IER
         .endif
         ldx     #$05            ; get registers from stack
 LCC9E:  pla                     ; (were put there when IRQ happened)

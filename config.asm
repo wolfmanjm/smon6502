@@ -4,11 +4,12 @@
 ; and/or
 ; - want to use the VIA UART driver
 ; If neither of these applies, set the VIA address to 0
-VIA = $6000
+VIA = $FFD0
+;VIA = $0000
 
 ; Highest address of installed RAM - all RAM is assumed to be
 ; in one consecutive range from 0-RAMTOP
-RAMTOP = $3FFF
+RAMTOP = $DFFF
 
 ; main CPU clock rate (used for UART timing)
 CPU_CLOCK_RATE  = 1000000
@@ -17,7 +18,8 @@ CPU_CLOCK_RATE  = 1000000
 ;   6522: MOS 6522 (VIA)
 ;   6551: MOS 6551 or WDC 65C51N (ACIA)
 ;   6850: Motorola MC6850 UART
-UART_TYPE = 6551
+;   0000: Pico6502 emulation
+UART_TYPE = 0000
                 
 ;;; ------------------------------------------------------------------
 

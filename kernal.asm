@@ -67,7 +67,7 @@ KGETIN: LDA     $C6
         LDA     $0277
         RTS
 GETIN1: JSR     UAGET           ; get char from UART, zero if none
-        CMP	#$00		; did we receive a character?
+        CMP	    #$00		    ; did we receive a character?
         BEQ     GETINR          ; if not, return with 0
         CMP     #27             ; is it ESC (stop)?
         BEQ     SETSF           ; set STOP flag if so
@@ -539,7 +539,11 @@ RESET:  SEI                     ; prevent IRQ interrupts
      .if UART_TYPE==6850
        .include "uart_6850.asm"
      .else
-       .err "invalid UART_TYPE"
+       .if UART_TYPE==0000
+         .include "ria.asm"
+       .else
+         .err "invalid UART_TYPE"
+       .endif
      .endif
    .endif
  .endif
@@ -548,52 +552,53 @@ RESET:  SEI                     ; prevent IRQ interrupts
 ;;; -------------------------  C64 kernal jump table  --------------------------
 ;;; ----------------------------------------------------------------------------
 
-        .org    $FF81
-        JMP     KSTUB           ; FF81:
-        JMP     KSTUB           ; FF84:
-        JMP     KSTUB           ; FF87:
-        JMP     KSTUB           ; FF8A:
-        JMP     KSTUB           ; FF8D:
-        JMP     KMSGFLG         ; FF90: set kernal message output flag
-        JMP     KSTUB           ; FF93:
-        JMP     KSTUB           ; FF96:
-        JMP     KRWMEMT         ; FF99: get or set memory top address
-        JMP     KRWMEMB         ; FF9C: get or set memory bottom address
-        JMP     KSTUB           ; FF9F:
-        JMP     KSTUB           ; FFA2:
-        JMP     KSTUB           ; FFA5:
-        JMP     KSTUB           ; FFA8:
-        JMP     KSTUB           ; FFAB:
-        JMP     KSTUB           ; FFAE:
-        JMP     KSTUB           ; FFB1:
-        JMP     KSTUB           ; FFB4:
-        JMP     KIOSTUB         ; FFB7: read I/O status word
-        JMP     KIOSTUB         ; FFBA: set logical, first and second address
-        JMP     KIOSTUB         ; FFBD: set file name
-        JMP     KIOSTUB         ; FFC0: open loical file
-        JMP     KIOSTUB         ; FFC3: close logical file
-        JMP     KIOSTUB         ; FFC6: open channel for input
-        JMP     KIOSTUB         ; FFC9: open channel for output
-        JMP     KIOSTUB         ; FFCC: close channels
-        JMP     KCHRIN          ; FFCF: get input character
-        JMP     KCHROUT         ; FFD2: print output character
-        JMP     KIOSTUB         ; FFD5: load data from device
-        JMP     KIOSTUB         ; FFD8: save data to device
-        JMP     KSTUB           ; FFDB: set the real time clock
-        JMP     KSTUB           ; FFDB: get the real time clock
-        JMP     KSTOP           ; FFE1: check stop key
-        JMP     KGETIN          ; FFE4: get character from keyboard
-        JMP     KIOSTUB         ; FFE7: close all channels
-        JMP     KSTUB           ; FFEA:
-        JMP     KSTUB           ; FFED:
-        JMP     KSTUB           ; FFF0:
-        JMP     KSTUB           ; FFF3:
+;        .org    $FF81
+JMPTABLE:
+        JMP     KSTUB           ; $00 FF81:
+        JMP     KSTUB           ; $01 FF84:
+        JMP     KSTUB           ; $02 FF87:
+        JMP     KSTUB           ; $03 FF8A:
+        JMP     KSTUB           ; $04 FF8D:
+        JMP     KMSGFLG         ; $05 FF90: set kernal message output flag
+        JMP     KSTUB           ; $06 FF93:
+        JMP     KSTUB           ; $07 FF96:
+        JMP     KRWMEMT         ; $08 FF99: get or set memory top address
+        JMP     KRWMEMB         ; $09 FF9C: get or set memory bottom address
+        JMP     KSTUB           ; $0A FF9F:
+        JMP     KSTUB           ; $0B FFA2:
+        JMP     KSTUB           ; $0C FFA5:
+        JMP     KSTUB           ; $0D FFA8:
+        JMP     KSTUB           ; $0E FFAB:
+        JMP     KSTUB           ; $0F FFAE:
+        JMP     KSTUB           ; $10 FFB1:
+        JMP     KSTUB           ; $11 FFB4:
+        JMP     KIOSTUB         ; $12 FFB7: read I/O status word
+        JMP     KIOSTUB         ; $13 FFBA: set logical, first and second address
+        JMP     KIOSTUB         ; $14 FFBD: set file name
+        JMP     KIOSTUB         ; $15 FFC0: open loical file
+        JMP     KIOSTUB         ; $16 FFC3: close logical file
+        JMP     KIOSTUB         ; $17 FFC6: open channel for input
+        JMP     KIOSTUB         ; $18 FFC9: open channel for output
+        JMP     KIOSTUB         ; $19 FFCC: close channels
+        JMP     KCHRIN          ; $1A FFCF: get input character
+        JMP     KCHROUT         ; $1B FFD2: print output character
+        JMP     KIOSTUB         ; $1C FFD5: load data from device
+        JMP     KIOSTUB         ; $1D FFD8: save data to device
+        JMP     KSTUB           ; $1E FFDB: set the real time clock
+        JMP     KSTUB           ; $1F FFDB: get the real time clock
+        JMP     KSTOP           ; $20 FFE1: check stop key
+        JMP     KGETIN          ; $21 FFE4: get character from keyboard
+        JMP     KIOSTUB         ; $22 FFE7: close all channels
+        JMP     KSTUB           ; $23 FFEA:
+        JMP     KSTUB           ; $24 FFED:
+        JMP     KSTUB           ; $25 FFF0:
+        JMP     KSTUB           ; $26 FFF3:
 
 ;;; ----------------------------------------------------------------------------
 ;;; -------------------------  6502 hardware vectors   -------------------------
 ;;; ----------------------------------------------------------------------------
         
-        .org    $FFFA
-        .word   NMI             ; hardware NMI vector
-        .word   RESET           ; hardware RESET vector
-        .word   IRQ             ; hardware IRQ/BRK vector
+;        .org    $FFFA
+;        .word   NMI             ; hardware NMI vector
+;        .word   RESET           ; hardware RESET vector
+;        .word   IRQ             ; hardware IRQ/BRK vector
