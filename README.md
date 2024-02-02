@@ -1,5 +1,12 @@
 # SMON
 
+This repo modifies the original by adding RIA support instead of a UART.
+Also the location of the jump table is labelled and used so as not to create a larger binary.
+
+The rest is pretty much the same....
+
+
+
 SMON is a machine language monitor and direct assembler for the Commodore 64,
 published in 1984 in "64'er" magazine (for more info see the [credit section](https://github.com/dhansel/smon6502#credits) below).
 
