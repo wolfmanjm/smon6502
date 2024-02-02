@@ -1,5 +1,7 @@
 # SMON
 
+Modified to run on the [pico 6502](https://github.com/picocomputer/rp6502)
+
 This repo modifies the original by adding RIA support instead of a UART.
 Also the location of the jump table is labelled and used so as not to create a larger binary.
 
