@@ -32,3 +32,6 @@ UAGETW:
         LDA     RIA_RX     ; Read character from RX.
         RTS
 
+UAEXIT:
+        LDA #RIA_OP_EXIT    ; A = 255, OS exit()
+        STA RIA_OP          ; Halt 6502

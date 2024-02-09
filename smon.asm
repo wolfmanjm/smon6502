@@ -89,7 +89,7 @@ HLPMSG: .byte   "A xxxx - Assemble starting at x (end assembly with 'f', use Mxx
         .byte   0
         
         ;; commands
-ICMD:   .byte "'#$%,:;=?ACDFGHKLMORTVW"
+ICMD:   .byte "'#$%,:;=?ACDFGHKLMORTVWX"
 ICMDE:  .byte $00,$00,$00,$00,$00
 
         ;; command entry point addresses
@@ -116,6 +116,7 @@ IOFS:   .byte   <(TICK-1),>(TICK-1)             ; '
         .byte   <(TRACE-1),>(TRACE-1)           ; T
         .byte   <(MOVE-1),>(MOVE-1)             ; V
         .byte   <(WRITE-1),>(WRITE-1)           ; W
+        .byte   <(EXIT-1),>(EXIT-1)           ; X
 
         ;; output line start characters
 LC061:  .byte   "':;,()!"
@@ -1901,6 +1902,9 @@ LCDF2:  lda     IRQ_LO
         sta     BRK_HI
         rts
         
+EXIT:
+        JMP UAEXIT
+
 ;;; ----------------------------------------------------------------------------
 ;;; ---------------------------  C64 KERNAL routines   -------------------------
 ;;; ----------------------------------------------------------------------------
